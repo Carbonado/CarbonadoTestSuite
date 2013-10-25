@@ -38,7 +38,7 @@ public class TestUtilities {
     public static final String FILE_PATH_KEY = "filepath";
 
     // Keep memory usage low to prevent spurious out-of-memory errors while running tests.
-    private static final int DEFAULT_CAPACITY = 100000;
+    public static final int DEFAULT_CAPACITY = 100000;
 
     private static final Random sRandom = new Random();
 
@@ -122,12 +122,20 @@ public class TestUtilities {
                                                              int capacity,
                                                              boolean isMaster)
     {
+        return newTempRepositoryBuilder(name, capacity, isMaster, true);
+    }
+
+    public static RepositoryBuilder newTempRepositoryBuilder(String name,
+                                                             int capacity,
+                                                             boolean isMaster,
+                                                             boolean inMemory)
+    {
         BDBRepositoryBuilder builder = new BDBRepositoryBuilder();
         builder.setProduct("JE");
         builder.setName(name);
         builder.setTransactionNoSync(true);
         builder.setCacheSize(capacity);
-        builder.setLogInMemory(true);
+        builder.setLogInMemory(inMemory);
         builder.setMaster(isMaster);
         builder.setEnvironmentHome(makeTestDirectoryString(name));
         // Makes it easier to get a thread dump during a deadlock.
