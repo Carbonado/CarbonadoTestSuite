@@ -5,7 +5,7 @@
   <artifactId>carbonado-test-suite</artifactId>
   <packaging>jar</packaging>
   <name>CarbonadoTestSuite</name>
-  <version>1.2.3</version>
+  <version>1.2.4</version>
   <description>
     Test suite for Carbonado.
   </description>
@@ -69,21 +69,21 @@
     <dependency>
       <groupId>com.amazon.carbonado</groupId>
       <artifactId>carbonado</artifactId>
-      <version>1.2.3</version>
+      <version>[1.2.4,)</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.amazon.carbonado</groupId>
       <artifactId>carbonado-sleepycat-je</artifactId>
-      <version>1.2.3</version>
+      <version>[1.2.4,)</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.amazon.carbonado</groupId>
       <artifactId>carbonado-sleepycat-db</artifactId>
-      <version>1.2.3</version>
+      <version>[1.2.4,)</version>
       <scope>test</scope>
     </dependency>
 
@@ -119,6 +119,13 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>[3.3,)</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
