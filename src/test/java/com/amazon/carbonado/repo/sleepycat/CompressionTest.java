@@ -262,15 +262,10 @@ public class CompressionTest extends TestCase {
         bdb.setCompressor(Unevo.class.getName(), "GZIP");
         mRepository = bdb.build();
 
-        storage = mRepository.storageFor(Unevo.class);
-
-        message = storage.prepare();
-        message.setKey("lemon");
-        try {
-            message.load();
-            fail();
-        } catch (CorruptEncodingException e) {
-        }
+        // Assert the LayoutCapability has not evolved.
+        cap = mRepository.getCapability(LayoutCapability.class);
+        layout = cap.layoutFor(Unevo.class);
+        assertEquals(null, layout);
     }
 
     private Repository createRepository(String name) throws Exception {
