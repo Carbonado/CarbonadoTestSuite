@@ -3513,6 +3513,33 @@ public class TestStorables extends TestCase {
         }
     }
 
+    public void test_loadByAltKeyWithAutomatic() throws Exception {
+        Storage<AutomaticAndAltKey> storage =
+                getRepository().storageFor(AutomaticAndAltKey.class);
+
+        // Insert a couple of records, starting with id=1.
+        // Note: manually set the Automatic ID property because not every
+        //       Repository type will set it automatically.
+        for (int i=1; i <= 2; i++) {
+            AutomaticAndAltKey record = storage.prepare();
+            record.setID(i);
+            record.setName("row" + i);
+            record.insert();
+        }
+
+        // Load an existing record.
+        AutomaticAndAltKey record = storage.prepare();
+        record.setName("row2");
+        assertTrue(record.tryLoad());
+        assertEquals(2, record.getID());
+        assertEquals("row2", record.getName());
+
+        // Load a non-existent record.
+        record = storage.prepare();
+        record.setName("row3");
+        assertFalse(record.tryLoad());
+    }
+
     private void assertUninitialized(boolean expected, Storable storable, String... properties) {
         for (String property : properties) {
             assertEquals(expected, storable.isPropertyUninitialized(property));

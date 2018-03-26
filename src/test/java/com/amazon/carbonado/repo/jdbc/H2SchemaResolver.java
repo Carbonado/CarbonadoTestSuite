@@ -135,6 +135,10 @@ public class H2SchemaResolver implements SchemaResolver {
                 b.append(" NOT NULL");
             }
 
+            if (property.isAutomatic()) {
+                b.append(" AUTO_INCREMENT");
+            }
+
             if (property.getSequenceName() != null) {
                 sequenceNames.add(property.getSequenceName());
             }

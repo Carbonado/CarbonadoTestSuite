@@ -25,6 +25,7 @@ import java.io.*;
 
 import java.sql.DriverManager;
 
+import com.amazon.carbonado.stored.AutomaticAndAltKey;
 import junit.framework.TestSuite;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -74,6 +75,36 @@ public class TestH2 extends com.amazon.carbonado.TestStorables {
                 cap2.setAutoShutdownEnabled(false);
             }
             cap.getConnection().createStatement().execute("SHUTDOWN IMMEDIATELY");
+        }
+    }
+
+    public void test_automaticProperty() throws Exception {
+        Storage<AutomaticAndAltKey> storage =
+                getRepository().storageFor(AutomaticAndAltKey.class);
+
+        // Insert some record and expect the ID to be set automatically.
+        for (int i=1; i <= 5; i++) {
+            AutomaticAndAltKey record = storage.prepare();
+            record.setName("row" + i);
+            record.insert();
+        }
+
+        // Load by primary key
+        for (int i=1; i <= 5; i++) {
+            AutomaticAndAltKey record = storage.prepare();
+            record.setID(i);
+            assertTrue(record.tryLoad());
+            assertEquals(i, record.getID());
+            assertEquals("row" + i, record.getName());
+        }
+
+        // Load by alternate key
+        for (int i=1; i <= 5; i++) {
+            AutomaticAndAltKey record = storage.prepare();
+            record.setName("row" + i);
+            assertTrue(record.tryLoad());
+            assertEquals(i, record.getID());
+            assertEquals("row" + i, record.getName());
         }
     }
 
