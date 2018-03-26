@@ -564,13 +564,14 @@ public class TestFilteringScore extends TestCase {
         assertEquals(1, comp.compare(score_1, score_2));
         assertEquals(-1, comp.compare(score_2, score_1));
 
-        // Both indexes are as good, since range is open.
+        // Favor ix_2 because it hasRangeStart.
+        // See Carbonado@60b4fa0c1cfacc9ad484c08fbbd0de7b69ea27ca
         filter = Filter.filterFor(StorableTestBasic.class, "id = ? & stringProp > ?");
         score_1 = FilteringScore.evaluate(ix_1, filter);
         score_2 = FilteringScore.evaluate(ix_2, filter);
 
-        assertEquals(0, comp.compare(score_1, score_2));
-        assertEquals(0, comp.compare(score_2, score_1));
+        assertEquals(1, comp.compare(score_1, score_2));
+        assertEquals(-1, comp.compare(score_2, score_1));
 
         filter = Filter.filterFor(StorableTestBasic.class,
                                   "id = ? & intProp = ? & stringProp > ?");
@@ -603,12 +604,13 @@ public class TestFilteringScore extends TestCase {
         assertEquals(0, comp.compare(score_1, score_2));
         assertEquals(0, comp.compare(score_2, score_1));
 
+        // When both indexes can satisfy the range, prefer the clustered index.
         filter = Filter.filterFor(StorableTestBasic.class, "id >= ?");
         score_1 = FilteringScore.evaluate(ix_1, filter);
         score_2 = FilteringScore.evaluate(ix_2.clustered(true), filter);
 
-        assertEquals(0, comp.compare(score_1, score_2));
-        assertEquals(0, comp.compare(score_2, score_1));
+        assertEquals(1, comp.compare(score_1, score_2));
+        assertEquals(-1, comp.compare(score_2, score_1));
     }
 
     public void testFullComparator() throws Exception {
